@@ -40,6 +40,7 @@
           ps.pypng
           ps.lz4
           ps.ollama
+          ps.rich
         ]);
 
         multiPackages =
