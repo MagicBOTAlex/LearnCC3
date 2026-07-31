@@ -43,6 +43,8 @@
           ps.rich
           ps.prompt-toolkit
           ps.pypinyin
+          ps.reportlab
+          ps.xhtml2pdf
         ]);
 
         multiPackages =
