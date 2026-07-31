@@ -1,22 +1,54 @@
 import re
 from pypinyin import Style, pinyin
 
+# Pairs to treat as unbreakable blocks when splitting sentences
+PAIR_MAP = {
+    "(": ")",
+    "（": "）",
+    "[": "]",
+    "【": "】",
+    "{": "}",
+    "“": "”",
+    "«": "»",
+    "“": "”",
+}
+
 
 def split_sentences(text: str) -> list[str]:
-    """Splits Chinese text by sentence delimiters (。, ！, ？, \n) while keeping the original text clean."""
-    raw_chunks = re.split(r"([。！？\n])", text)
+    """Splits Chinese text by sentence delimiters (。, ！, ？, \n) while respecting
+
+    nested brackets, quotes, and parentheses.
+    """
+    # Find punctuation delimiters only when stack depth is 0
+    delimiters = set("。！？\n")
+    open_pairs = set(PAIR_MAP.keys())
+    close_pairs = {v: k for k, v in PAIR_MAP.items()}
+
+    stack = []
     sentences = []
+    current_chunk = []
 
-    for i in range(0, len(raw_chunks) - 1, 2):
-        chunk = raw_chunks[i] + raw_chunks[i + 1]
-        chunk = chunk.strip()
-        if chunk:
-            sentences.append(chunk)
+    for char in text:
+        current_chunk.append(char)
 
-    if len(raw_chunks) % 2 != 0:
-        tail = raw_chunks[-1].strip()
-        if tail:
-            sentences.append(tail)
+        if char in open_pairs:
+            stack.append(char)
+        elif char in close_pairs:
+            if stack and stack[-1] == close_pairs[char]:
+                stack.pop()
+
+        # If we hit a sentence delimiter and we aren't inside parentheses/quotes
+        elif char in delimiters and not stack:
+            sentence = "".join(current_chunk).strip()
+            if sentence:
+                sentences.append(sentence)
+            current_chunk = []
+
+    # Handle any remaining trailing text
+    if current_chunk:
+        sentence = "".join(current_chunk).strip()
+        if sentence:
+            sentences.append(sentence)
 
     return sentences
 
