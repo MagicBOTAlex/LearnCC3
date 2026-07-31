@@ -41,6 +41,7 @@
           ps.lz4
           ps.ollama
           ps.rich
+          ps.prompt-toolkit
         ]);
 
         multiPackages =
