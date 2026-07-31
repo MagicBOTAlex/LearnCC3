@@ -2,7 +2,7 @@ import sys
 from prompt_toolkit import prompt
 
 from config import MODEL_NAME, console
-from translator import prompt_gemma_stream
+from translator import ollama_stream
 
 
 def main():
@@ -23,7 +23,7 @@ def main():
         f"\nSending prompt to local Ollama instance ({MODEL_NAME})...\n",
         style="bold blue",
     )
-    prompt_gemma_stream(user_input)
+    ollama_stream(user_input)
 
 
 if __name__ == "__main__":

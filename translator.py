@@ -7,10 +7,13 @@ from xhtml2pdf import pisa
 
 from config import MODEL_NAME, OUTPUT_PDF, SYSTEM_PROMPT, console
 from text_utils import convert_to_pinyin, split_sentences
+from weasyprint import HTML
+from config import OUTPUT_PDF, console
+from text_utils import convert_to_pinyin
 
 
 def export_to_pdf(sentences: list[str], output_path: str):
-    """Generates a clean PDF containing Chinese text and Pinyin using HTML/CSS rendering."""
+    """Generates a clean PDF containing Chinese text and Pinyin using WeasyPrint HTML/CSS rendering."""
 
     # Build HTML content with CSS for clean typography and CJK font fallback
     items_html = ""
@@ -25,7 +28,7 @@ def export_to_pdf(sentences: list[str], output_path: str):
 
     html_content = f"""
     <!DOCTYPE html>
-    <html>
+    <html lang="zh-CN">
     <head>
         <meta charset="utf-8">
         <style>
@@ -34,7 +37,7 @@ def export_to_pdf(sentences: list[str], output_path: str):
                 margin: 0.6in;
             }}
             body {{
-                font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", "SimSun", sans-serif;
+                font-family: 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', 'SimSun', sans-serif;
                 color: #111111;
                 font-size: 11pt;
                 line-height: 1.5;
@@ -57,7 +60,7 @@ def export_to_pdf(sentences: list[str], output_path: str):
                 color: #555555;
                 font-style: italic;
                 line-height: 1.4;
-                font-family: "Helvetica", sans-serif;
+                font-family: Arial, sans-serif;
             }}
         </style>
     </head>
@@ -67,14 +70,14 @@ def export_to_pdf(sentences: list[str], output_path: str):
     </html>
     """
 
-    with open(output_path, "wb") as pdf_file:
-        pisa_status = pisa.CreatePDF(html_content, dest=pdf_file)
+    try:
+        # Render HTML string directly to PDF using WeasyPrint
+        HTML(string=html_content).write_pdf(output_path)
+    except Exception as e:
+        console.print(f"[red]Error generating PDF document: {e}[/red]")
 
-    if pisa_status.err:
-        console.print("[red]Error generating PDF document.[/red]")
 
-
-def prompt_gemma_stream(prompt_text: str):
+def ollama_stream(prompt_text: str):
     start_time = time.perf_counter()
 
     stream = ollama.chat(
@@ -84,7 +87,6 @@ def prompt_gemma_stream(prompt_text: str):
             {"role": "user", "content": prompt_text},
         ],
         stream=True,
-        think="low",
         options={
             "temperature": 0,
             "num_ctx": 51200,

@@ -45,6 +45,7 @@
           ps.pypinyin
           ps.reportlab
           ps.xhtml2pdf
+          ps.weasyprint
         ]);
 
         multiPackages =

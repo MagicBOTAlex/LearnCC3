@@ -1,3 +1,4 @@
 out.pdf
 lib/**
 __pycache__/**
+.env

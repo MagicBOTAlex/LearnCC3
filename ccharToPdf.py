@@ -1,0 +1,99 @@
+from weasyprint import HTML
+
+# Define the HTML content with embedded CSS styling
+html_content = """<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>中文翻译示例</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 20mm;
+            background-color: #fcfcfc;
+        }
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif;
+            color: #2b2b2b;
+            line-height: 1.8;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: #ffffff;
+            border: 1px solid #e1e4e8;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        .header {
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 12px;
+            margin-bottom: 24px;
+        }
+        h1 {
+            color: #2c3e50;
+            font-size: 20pt;
+            margin: 0;
+        }
+        .pinyin {
+            font-size: 11pt;
+            color: #7f8c8d;
+            background-color: #f8f9fa;
+            padding: 10px 14px;
+            border-left: 4px solid #bdc3c7;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-family: Arial, sans-serif;
+        }
+        .text-box {
+            background-color: #ebf5fb;
+            border-left: 4px solid #3498db;
+            padding: 15px 20px;
+            border-radius: 4px;
+            font-size: 14pt;
+            color: #1a5276;
+            font-weight: 500;
+        }
+        .footer {
+            margin-top: 30px;
+            font-size: 9pt;
+            color: #95a5a6;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>中文翻译文档</h1>
+        </div>
+        
+        <div class="text-box">
+            以下是为您翻译的简体中文版本，采用了通俗易懂的词汇：
+        </div>
+        
+        <div class="pinyin">
+            yǐ xià shì wèi nín fān yì de jiǎn tǐ zhōng wén bǎn běn ， cǎi yòng le tōng sú yì dǒng de cí huì
+        </div>
+
+        <div class="footer">
+            生成时间: 2026年7月31日
+        </div>
+    </div>
+</body>
+</html>
+"""
+
+# Save the HTML string to a file
+html_filename = "document.html"
+pdf_filename = "chinese_translation.pdf"
+
+with open(html_filename, "w", encoding="utf-8") as f:
+    f.write(html_content)
+
+# Convert HTML to PDF
+HTML(html_filename).write_pdf(pdf_filename)
+print(f"PDF successfully generated: {pdf_filename}")
