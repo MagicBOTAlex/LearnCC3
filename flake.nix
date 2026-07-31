@@ -42,6 +42,7 @@
           ps.ollama
           ps.rich
           ps.prompt-toolkit
+          ps.pypinyin
         ]);
 
         multiPackages =
